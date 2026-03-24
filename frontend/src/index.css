@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --app-bg: #1a1a1a;
+  --sidebar-bg: #212121;
+  --panel-bg: #252525;
+  --elevated-bg: #2d2d2d;
+  --input-bg: #1a1a1a;
+  --code-bg: #141414;
+  --border: #3c3c3c;
+  --text: #e8e8e8;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+  --accent: #ff6c37;
+  --accent-hover: #ff8555;
+  --accent-muted: rgba(255, 108, 55, 0.12);
+  --accent-border: rgba(255, 108, 55, 0.45);
+  --chip-bg: #252525;
+  --header-bg: #212121;
+  --meta-bar-bg: #1e1e1e;
+  --btn-disabled-bg: #404040;
+  --btn-disabled-text: #737373;
+  --link-accent: #ff8555;
+  --link-accent-hover: #ffa07a;
+  --summary-text: #d1d5db;
+  --error-bg: rgba(239, 68, 68, 0.1);
+  --error-border: rgba(239, 68, 68, 0.3);
+  --error-text: #fecaca;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --app-bg: #f4f4f5;
+  --sidebar-bg: #ececec;
+  --panel-bg: #ffffff;
+  --elevated-bg: #f4f4f5;
+  --input-bg: #ffffff;
+  --code-bg: #fafafa;
+  --border: #e4e4e7;
+  --text: #18181b;
+  --text-muted: #52525b;
+  --text-subtle: #71717a;
+  --accent: #ea580c;
+  --accent-hover: #c2410c;
+  --accent-muted: rgba(234, 88, 12, 0.1);
+  --accent-border: rgba(234, 88, 12, 0.4);
+  --chip-bg: #ffffff;
+  --header-bg: #fafafa;
+  --meta-bar-bg: #f4f4f5;
+  --btn-disabled-bg: #d4d4d8;
+  --btn-disabled-text: #71717a;
+  --link-accent: #c2410c;
+  --link-accent-hover: #9a3412;
+  --summary-text: #3f3f46;
+  --error-bg: rgba(239, 68, 68, 0.08);
+  --error-border: rgba(239, 68, 68, 0.25);
+  --error-text: #991b1b;
+}
+
+:root {
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--app-bg);
+  color: var(--text);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--text);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
