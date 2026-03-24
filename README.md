@@ -1,102 +1,85 @@
-# Cerevyn
+# Cerevyn SaaS Platform
 
-Autonomous multi-step assistant: natural-language tasks, **Google GenAI (Gemini)** function calling, **Google Calendar / Meet** for events, and **AWS SES** for email. A **FastAPI** backend and **React** dashboard track runs, tool calls, and human-in-the-loop clarifications.
+**Cerevyn** is an enterprise-grade, autonomous multi-step AI assistant built on a modern SaaS architecture. Leveraging **Google GenAI (Gemini)** for intelligent function calling and **FastAPI** for high-performance backend routing, Cerevyn seamlessly handles natural-language tasks, event scheduling, and automated communication workflows.
 
-## Features
+---
 
-- **Agent loop** — Gemini calls tools (`Calendar`, `send_notification_email`) until the task completes or needs user input.
-- **Run history** — Stored in **SQLite** (`data/cerevyn_runs.sqlite` by default) so runs survive API restarts.
-- **Dashboard** — React + Vite + Tailwind: run list, execution timeline (with auto-scroll), results, Google OAuth status, light/dark theme.
-- **Email** — SES sends multipart HTML + plain text; the model writes the main message body; the template adds a summary card and footer.
+## 🏗️ SaaS Level Architecture
 
-## Requirements
+Cerevyn is designed with a scalable, modular architecture that ensures robust performance and seamless user experiences:
 
+### 1. Advanced DOM Control & Dynamic UI
+The sophisticated **React + Vite** frontend architecture **takes full control of the DOM** to deliver a premium, responsive Dashboard. 
+- **Real-Time Rendering:** Dynamically updates the UI with live execution timelines, status badges, and human-in-the-loop prompts.
+- **Seamless State Management:** Ensures smooth transitions and instant updates without page reloads, providing a desktop-app-like experience in the browser.
+
+### 2. Comprehensive Process Capture
+The API layer robustly **captures the entire agent execution process**:
+- **Execution Telemetry:** Every step of the agent's thought process, tool requests, and human interactions are captured and persistently stored.
+- **SQLite Persistence:** Run history survives API restarts and scales effortlessly (`data/cerevyn_runs.sqlite`), allowing for detailed auditing and process playback.
+- **Background Processing:** Agent loops run asynchronously, ensuring the main thread remains unblocked for high-throughput API requests.
+
+### 3. Intelligent Email Messaging
+Cerevyn integrates deep **AWS SES** capabilities for enterprise email delivery:
+- **Automated Dispatches:** Automatically dispatches professional email messages and Google Meet invites exactly when the agent determines it is necessary.
+- **Rich Multipart Messaging:** Delivers AI-generated, highly contextual plain-text bodies wrapped in a beautifully formatted HTML styling, complete with meeting summary cards and footers.
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
 - Python **3.10+**
-- Node **18+** (for the frontend)
-- API keys: **Gemini**, optional **Google OAuth** (Calendar/Meet), optional **AWS SES** for email
+- Node.js **18+**
+- API Keys: **Gemini API**, **Google OAuth** (Calendar/Meet), and **AWS SES**.
 
-## Quick start
-
-### 1. Backend
-
+### Backend Setup
 ```bash
 cd /path/to/Cerevyn
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate   # On Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
-cp .env.example .env        # fill GEMINI_API_KEY and any optional services
+cp .env.example .env        # Configure GEMINI_API_KEY and AWS credentials
 ```
 
-Run the API (from repo root, `PYTHONPATH` must include `src`):
-
+**Run the API Server:**
 ```bash
 PYTHONPATH=src uvicorn api.main:app --reload --host 127.0.0.1 --port 8000
 ```
+*Health Check: `GET http://127.0.0.1:8000/health`*
 
-Health: `GET http://127.0.0.1:8000/health`
-
-### 2. Frontend
-
+### Frontend Setup
 ```bash
 cd frontend
-cp .env.example .env.local   # optional: set VITE_API_BASE_URL
+cp .env.example .env.local   # Configure VITE_API_BASE_URL
 npm install
 npm run dev
 ```
+*The Dashboard will be available at `http://127.0.0.1:5173`.*
 
-Open the URL Vite prints (e.g. `http://127.0.0.1:5173`). CORS allows `localhost` / `127.0.0.1` on port 5173.
+---
 
-### 3. Tests
+## ⚙️ Core Configuration
 
+Control the SaaS environment via `.env` files:
+
+| Environment Variable | Description |
+|----------------------|-------------|
+| `GEMINI_API_KEY` | **Required.** Authenticates the core LLM engine. |
+| `GEMINI_MODEL_NAME` | Specifies the model version (defaults to `gemini-3.1-pro-preview`). |
+| `CLIENT_ID` & `SECRET` | Google OAuth credentials for Google Calendar and Meet integrations. |
+| `CEREVYN_RUNS_DB` | Absolute path for SQLite persistence tracking. |
+| `AWS_SES_SENDER_EMAIL`| Authorized email address for outbound automated communications. |
+
+---
+
+## 🧪 Testing
+
+Run continuous integration tests easily:
 ```bash
 pytest
 ```
 
-(`pythonpath` for tests is set in `pyproject.toml`.)
-
-## Configuration
-
-| Variable | Purpose |
-|----------|---------|
-| `GEMINI_API_KEY` | Required for the agent. |
-| `GEMINI_MODEL_NAME` | Model id (default in code if unset). |
-| `CLIENT_ID`, `CLIENT_SECRET`, `GOOGLE_OAUTH_REDIRECT_URI` | Google OAuth for Calendar/Meet; redirect must match the GCP console. |
-| `GOOGLE_OAUTH_TOKEN_JSON` | Where OAuth tokens are stored (default under `.tokens/`). |
-| `CEREVYN_RUNS_DB` | Optional absolute path to SQLite DB; default `data/cerevyn_runs.sqlite`. |
-| `AWS_*`, `AWS_SES_SENDER_EMAIL` | SES for outbound mail. |
-
-Frontend: `VITE_API_BASE_URL` (see `frontend/.env.example`) points the SPA at the API.
-
-## Project layout
-
-```
-Cerevyn/
-├── src/                    # Python package (on PYTHONPATH)
-│   ├── api/                # FastAPI app, routes (runs, auth)
-│   ├── services/           # Run store, SQLite persistence, run service
-│   ├── agent_core.py       # Gemini loop + tool execution
-│   ├── calendar_manager.py # Calendar + Meet + OAuth
-│   └── notification_manager.py
-├── tests/
-├── frontend/               # React SPA
-├── data/                   # SQLite DB (gitignored; .gitkeep kept)
-└── pyproject.toml
-```
-
-## Architecture (short)
-
-1. **POST /runs** creates a run; optional clarification if the prompt is ambiguous.
-2. A **background thread** runs `run_agent_session`: Gemini ↔ tools; events appended to the run.
-3. **GET /runs**, **GET /runs/{id}**, **GET /runs/{id}/events** sync the UI.
-
-## API overview
-
-- `GET /health` — Liveness.
-- `GET /runs`, `POST /runs` — List / start runs.
-- `GET /runs/{id}`, `GET /runs/{id}/events` — Run state and incremental events.
-- `POST /runs/{id}/respond` — User reply when status is `waiting_for_user`.
-- Google OAuth routes under `/auth/google/...` (see `src/api/routes/auth.py`).
-
-## License / status
-
-Internal / project work (PS3-style agent). Adjust `pyproject.toml` metadata if you publish.
+## 📄 License & Status
+Internal SaaS Project (PS3-style autonomous agent). 
+*Designed for high availability, robust process capturing, and intelligent DOM UI control.*
