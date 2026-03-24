@@ -1,3 +1,11 @@
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=black)
+![Google Calendar](https://img.shields.io/badge/Google%20Calendar-Scheduling-4285F4?logo=googlecalendar&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-AI-4285F4?logo=google&logoColor=white)
+![AWS SES](https://img.shields.io/badge/AWS%20SES-Email-FF9900?logo=amazonaws&logoColor=white)
+![OAuth 2.0](https://img.shields.io/badge/OAuth-2.0-000000?logo=oauth&logoColor=white)
+
 # 🧠 Cerevyn: Autonomous AI Orchestration Engine
 
 An enterprise-grade, full-stack autonomous AI agent system designed to handle complex scheduling, context reasoning, and operational logistics. Built with **FastAPI** and **React**, and powered by the advanced reasoning capabilities of **Google Gemini**.
@@ -70,7 +78,7 @@ graph TD
     RS -->|Spawns Thread| AG
     AG <-->|Context & Reasoning| LLM
     AG -->|Tool Execution| CAL
-    AG -->|Tool Execution| SES
+    AG -->|Tool Execution| SES 
 
     class UserLayer,BackendServices,PersistenceLayer,ExternalIntegrations cluster;
 ```
@@ -78,83 +86,87 @@ graph TD
 ## 🛠️ Setup & Installation
 ## Prerequisites
 
-•  Python 3.9+
+**•  Python 3.9+**
 
-•  Node.js (v18+) for the Frontend
+**•  Node.js (v18+) for the Frontend**
 
-•  Google Cloud Console Project (OAuth Credentials & Calendar/Meet APIs enabled)
+**•  Google Cloud Console Project (OAuth Credentials & Calendar/Meet APIs enabled)**
 
-•  AWS Account (SES Verified Identities)
+**•  AWS Account (SES Verified Identities)**
 
-•  Google Gemini API Key
+**•  Google Gemini API Key**
 
-# 1. Backend Setup (/src)
+## 1. Backend Setup (/src)
 
-Clone the repository and navigate to the root directory.
+**Clone the repository and navigate to the root directory.**
 
-## Create and activate a virtual environment
-python -m venv .venv
+### a)Create and activate a virtual environment
 
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+**python -m venv .venv**
 
-## Install dependencies
-pip install -r requirements.txt
+**source .venv/bin/activate  # On Windows: .venv\Scripts\activate**
 
-Configure .env file:
+### b)Install dependencies
 
-Create a .env file in the root directory
+**pip install -r requirements.txt**
 
-## AI Engine
-GEMINI_API_KEY=your_gemini_api_key
+**Configure .env file:**
 
-GEMINI_MODEL_NAME=gemini-3.1-pro-preview
+**Create a .env file in the root directory**
 
-## Google Integration
-CLIENT_ID=your_google_client_id
+### c)AI Engine
+**GEMINI_API_KEY=your_gemini_api_key**
 
-CLIENT_SECRET=your_google_client_secret
+**GEMINI_MODEL_NAME=gemini-3.1-pro-preview**
 
-GOOGLE_OAUTH_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+### d)Google Integration
+**CLIENT_ID=your_google_client_id**
 
-## AWS Integration
-AWS_REGION=us-east-1
+**CLIENT_SECRET=your_google_client_secret**
 
-AWS_SES_SENDER_EMAIL=your_verified_email@domain.com
+**GOOGLE_OAUTH_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback**
 
-## Launch the API:
+### e)AWS Integration
+**AWS_REGION=us-east-1**
 
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+**AWS_SES_SENDER_EMAIL=your_verified_email@domain.com**
 
-# 2. Frontend Setup (/frontend)
+### f)Launch the API:
 
-cd frontend
+**uvicorn main:app --reload --host 0.0.0.0 --port 8000**
 
-npm install
+## 2. Frontend Setup (/frontend)
 
-npm run dev
+**cd frontend**
+
+**npm install**
+
+**npm run dev**
 
 #### Ensure the frontend is configured to point to http://localhost:8000 for API requests.
 
-# 📱 Usage Guide: 
+## 📱 Usage Guide: 
 
-•  Authenticate: Navigate to the UI and connect your Google Calendar via the OAuth flow.
+**• Authenticate: Navigate to the UI and connect your Google Calendar via the OAuth flow.**
 
-•  Dispatch a Task: Input a complex prompt (e.g., "Set up a 45-minute sync with design@company.com tomorrow afternoon.")
+**• Dispatch a Task: Input a complex prompt (e.g., "Set up a 45-minute sync with design@company.com tomorrow afternoon.")**
 
-•  Monitor the Run: Watch the live event feed as the agent parses the request, executes the Calendar tool, and dispatches the AWS email.
+**• Monitor the Run: Watch the live event feed as the agent parses the request, executes the Calendar tool, and dispatches the AWS email.**
 
-•  Human Interaction: If the agent requires input (e.g., conflicting schedule), an interactive prompt will appear in the UI. Respond to resume the agent's background execution seamlessly.
+**• Human Interaction: If the agent requires input (e.g., conflicting schedule), an interactive prompt will appear in the UI. Respond to resume the agent's background execution seamlessly.**
 
-# 🛡️ Developer Notes:
+## 🛡️ Developer Notes:
+**• State Management: The SQLite database (cerevyn_runs.sqlite) safely persists runs across server restarts. You can blow it away to clear history during testing.**
 
-•  State Management: The SQLite database (cerevyn_runs.sqlite) safely persists runs across server restarts. You can blow it away to clear history during testing.
-
-•  OAuth Scopes: Ensure your Google Cloud app requests https://www.googleapis.com/auth/calendar and https://www.googleapis.com/auth/meetings.space.created.
+**• OAuth Scopes: Ensure your Google Cloud app requests https://www.googleapis.com/auth/calendar and https://www.googleapis.com/auth/meetings.space.created.**
 
 
-#### Author: INDEEVARASHYAM MAHANTHI
 
-#### Mail: indeevarmsv@gmail.com
+## 👤 Author
 
-#### Project: Submission PS-3
+### Indeevarashyam Mahanthi
+
+### 📧 indeevarmsv@gmail.com
+
+### 📁 Project: Submission PS-3
 
